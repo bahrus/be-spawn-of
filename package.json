@@ -27,7 +27,8 @@
   "types": "types.d.ts",
   "dependencies": {
     "be-decorated": "0.0.222",
-    "be-hive": "0.0.79"
+    "be-hive": "0.0.79",
+    "trans-render": "0.0.664"
   },
   "devDependencies": {
     "may-it-serve": "0.0.4",

@@ -23,11 +23,13 @@ class MyClass extends HTMLElement{
 Now contained in the cloned template used by the custom element, either ideally while stamping it, or, less ideally, post SSR'ing and/or appending to the ShadowRoot) we find: this markup:
 
 ```html
+<div>
 <template be-spawn-of>
     <my-virtual-element>
         <div>hello</div>
     </my-virtual-element>
 </template>
+</div>
 ```
 
 What this does:
