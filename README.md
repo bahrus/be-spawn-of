@@ -34,7 +34,7 @@ What this does:
 
 Since the root element contained within the template has a matching method name from the host, the content of the my-virtual-element element is passed to the method.
 
-The method can do whatever it wants.  The expectation, though, is that the contents of the my-virtual-element tag will be replaced with something during the first call, and capable of being updated with subsequent calls.
+The method can do whatever it wants.  The expectation, though, is that the contents of the my-virtual-element tag will be filled or replaced with something during the first call, and capable of being updated with subsequent calls.
 
 ## Plan B:  no matching method found in host
 

@@ -2,9 +2,38 @@
   "name": "be-spawn-of",
   "version": "0.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "be-spawn-of.js",
+  "module": "be-spawn-of.js",
+  "keywords": [
+    "web-components",
+    "web-component",
+    "custom-element",
+    "custom-elements",
+    "virtual-elements"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "playwright test",
+    "package-check": "package-check",
+    "serve": "node node_modules/may-it-serve/serve.js",
+    "safari": "npx playwright wk http://localhost:3030"
+  },
+  "exports": {
+    ".": "./be-spawn-of.js",
+    "./be-spawn-of.js": "./be-spawn-of.js"
+  },
+  "files": [
+    "*.*"
+  ],
+  "types": "types.d.ts",
+  "dependencies": {
+    "be-decorated": "0.0.222",
+    "be-hive": "0.0.79"
+  },
+  "devDependencies": {
+    "may-it-serve": "0.0.4",
+    "@skypack/package-check": "0.2.2",
+    "@playwright/test": "1.30.0",
+    "@custom-elements-manifest/analyzer": "0.6.4"
   },
   "repository": {
     "type": "git",
