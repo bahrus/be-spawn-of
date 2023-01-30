@@ -1,11 +1,14 @@
 import {BeDecoratedProps, MinimalProxy, EventConfigs} from 'be-decorated/types';
 
 export interface EndUserProps{
-    placement: 'fillParent' | 'appendAdjacent'
+    //placement: 'fillParent' | 'appendAdjacent'
+    template?: HTMLTemplateElement;
+    id?: string;
 }
 
 export interface VirtualProps extends EndUserProps, MinimalProxy<HTMLTemplateElement>{
-    isC: boolean;
+    //isC: boolean;
+    //deferRendering?: boolean;
 }
 
 export type Proxy = HTMLTemplateElement & VirtualProps;
@@ -19,5 +22,5 @@ export type PPP = Partial<PP>;
 export type PPE = [PPP, EventConfigs<Proxy, Actions>];
 
 export interface Actions{
-    searchHost(pp: PP, mold: PPP): Promise<PPP>;
+    delegateTemplate(pp: PP): PPP;
 }

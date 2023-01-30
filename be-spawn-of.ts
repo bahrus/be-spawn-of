@@ -4,19 +4,33 @@ import {Actions, PP, PPE, VirtualProps, Proxy, PPP} from './types';
 import {RenderContext} from 'trans-render/lib/types';
 
 export class BeSpawnOf extends EventTarget implements Actions{
-    async searchHost(pp: PP, mold: PPP): Promise<PPP> {
-        const {self} = pp;
-        const rn = self.getRootNode();
-        const host = (<any>rn).host as Element;
-        await customElements.whenDefined(host.localName);
-        const fragment = self.content.cloneNode(true) as DocumentFragment;
-        const {firstElementChild} = fragment;
-        const {localName} = firstElementChild!;
-        if(typeof (<any>host)[`<${localName}>`] !== 'function'){
-            //[TODO] Plan B
-            throw 'NI';
+    async delegateTemplate(pp: PP, mold: PPP): Promise<PPP> {
+        const {self, proxy} = pp;
+        const deferRendering = self.hasAttribute('defer-rendering');
+        //proxy.deferRendering = 
+        
+        //const rn = self.getRootNode();
+        //TODO:
+        /**
+         * If self is child of tr, tbody, table, ul, ol, etc, then use be-free-ranged.
+         * If template has no script children, delegate to be-inclusive
+         * For now, always delegate to be-transrendered
+         */
+        import('be-transrendered/be-transrendered.js');
+        import('be-scoped/be-scoped.js');
+        (<any>self).beDecorated.transrendered = {
+            deferRendering,
         }
-        await (<any>host)[`<${localName}>`](fragment);
+        // const host = (<any>rn).host as Element;
+        // await customElements.whenDefined(host.localName);
+        // const fragment = self.content.cloneNode(true) as DocumentFragment;
+        // const {firstElementChild} = fragment;
+        // const {localName} = firstElementChild!;
+        // if(typeof (<any>host)[`<${localName}>`] !== 'function'){
+        //     //[TODO] Plan B
+        //     throw 'NI';
+        // }
+        // await (<any>host)[`<${localName}>`](fragment);
         return mold;
     }
 }
@@ -31,11 +45,15 @@ define<Proxy & BeDecoratedProps<Proxy, Actions>, Actions>({
         propDefaults: {
             ifWantsToBe,
             upgrade,
-            virtualProps: ['isC']
+            virtualProps: ['template', 'id', 'deferRendering'],
+            primaryProp: 'id',
+            proxyPropDefaults: {
+                
+            }
         },
         actions: {
-            searchHost: {
-                ifAllOf: ['isC'],
+            delegateTemplate: {
+                ifAllOf: ['template'],
                 returnObjMold: {
                     resolved: true
                 }

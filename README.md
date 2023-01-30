@@ -20,7 +20,7 @@ class MyClass extends HTMLElement{
 }
 ```
 
-Now contained in the cloned template used by the custom element, either ideally while stamping it, or, less ideally, post SSR'ing and/or appending to the ShadowRoot) we find: this markup:
+Now contained in the cloned template used by the custom element, either ideally while stamping it, or, less ideally, post SSR'ing and/or appending to the ShadowRoot) we find this markup:
 
 ```html
 <div>
