@@ -1,37 +1,59 @@
 import {register} from 'be-hive/register.js';
 import {define, BeDecoratedProps} from 'be-decorated/DE.js';
+
 import {Actions, PP, PPE, VirtualProps, Proxy, PPP} from './types';
-import {RenderContext} from 'trans-render/lib/types';
+import {BeHaving} from 'trans-render/lib/types';
+import {EndUserProps as beTransRdrEUP} from 'be-transrendered/types';
+import {Meta} from 'be-indefinite/types';
 
 export class BeSpawnOf extends EventTarget implements Actions{
-    async delegateTemplate(pp: PP, mold: PPP): Promise<PPP> {
-        const {self, proxy} = pp;
-        const deferRendering = self.hasAttribute('defer-rendering');
-        //proxy.deferRendering = 
-        
-        //const rn = self.getRootNode();
-        //TODO:
-        /**
-         * If self is child of tr, tbody, table, ul, ol, etc, then use be-free-ranged.
-         * If template has no script children, delegate to be-inclusive
-         * For now, always delegate to be-transrendered
-         */
-        import('be-transrendered/be-transrendered.js');
+    intro(proxy: Proxy, target: Element): void {
+        proxy.id = target.getAttribute('data-spawn-of')!;
+    }
+    async passTemplate(pp: PP, mold: PPP): Promise<PPP> {
+        const {self, template} = pp;
+        const {doBeHavings} = await import('trans-render/lib/doBeHavings.js');
         import('be-scoped/be-scoped.js');
-        (<any>self).beDecorated.transrendered = {
-            deferRendering,
-        }
-        // const host = (<any>rn).host as Element;
-        // await customElements.whenDefined(host.localName);
-        // const fragment = self.content.cloneNode(true) as DocumentFragment;
-        // const {firstElementChild} = fragment;
-        // const {localName} = firstElementChild!;
-        // if(typeof (<any>host)[`<${localName}>`] !== 'function'){
-        //     //[TODO] Plan B
-        //     throw 'NI';
-        // }
-        // await (<any>host)[`<${localName}>`](fragment);
+        import('be-indefinite/be-indefinite.js')
+        import('be-transrendered/be-transrendered.js');
+        const meta: Meta = {};
+        //use be-scoped to create a proxy (PropertyBag) that serves as a host for transforms.
+        await doBeHavings(self, [
+            {
+                be: 'scoped',
+                waitForResolved: true
+            },
+        ]);
+        const host = (<any>self).beDecorated.scoped.scope;
+        //get reactive definitions from be-indefinite
+        await doBeHavings(template!, [
+            {
+                be: 'indefinite',
+                having: {
+                    meta
+                },
+                waitForResolved: true,
+            },
+        ]);
+        const {transformIslets} = meta;
+        //do transform
+        await doBeHavings(self, [            {
+            be: 'transrendered', 
+            having: {
+                template,
+                transformIslets,
+                host
+            } as beTransRdrEUP,
+            waitForResolved: true,
+        }]);
         return mold;
+    }
+
+    findTemplate(pp: PP): PPP {
+        const {self, id} = pp;
+        return {
+            template: (self.getRootNode() as DocumentFragment).getElementById(id!) as HTMLTemplateElement
+        }
     }
 }
 
@@ -45,18 +67,20 @@ define<Proxy & BeDecoratedProps<Proxy, Actions>, Actions>({
         propDefaults: {
             ifWantsToBe,
             upgrade,
-            virtualProps: ['template', 'id', 'deferRendering'],
+            virtualProps: ['template', 'id'],
             primaryProp: 'id',
-            proxyPropDefaults: {
-                
-            }
+            intro: 'intro',
         },
         actions: {
-            delegateTemplate: {
+            passTemplate: {
                 ifAllOf: ['template'],
                 returnObjMold: {
                     resolved: true
                 }
+            },
+            findTemplate: {
+                ifAllOf: ['id'],
+                ifNoneOf: ['template']
             }
         },
     },
