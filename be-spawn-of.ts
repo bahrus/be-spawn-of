@@ -18,13 +18,17 @@ export class BeSpawnOf extends EventTarget implements Actions{
         import('be-transrendered/be-transrendered.js');
         const meta: Meta = {};
         //use be-scoped to create a proxy (PropertyBag) that serves as a host for transforms.
-        await doBeHavings(self, [
-            {
-                be: 'scoped',
-                waitForResolved: true
-            },
-        ]);
-        const host = (<any>self).beDecorated.scoped.scope;
+        //but only if has itemscope attribute
+        const hasItemScope = self.hasAttribute('itemscope');
+        if(hasItemScope){
+            await doBeHavings(self, [
+                {
+                    be: 'scoped',
+                    waitForResolved: true
+                },
+            ]);
+        }
+
         //get reactive definitions from be-indefinite
         await doBeHavings(template!, [
             {
@@ -42,7 +46,6 @@ export class BeSpawnOf extends EventTarget implements Actions{
             having: {
                 template,
                 transformIslets,
-                host
             } as beTransRdrEUP,
             waitForResolved: true,
         }]);
