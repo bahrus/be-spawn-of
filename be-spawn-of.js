@@ -13,7 +13,7 @@ export class BeSpawnOf extends EventTarget {
         const meta = {};
         //use be-scoped to create a proxy (PropertyBag) that serves as a host for transforms.
         //but only if has itemscope attribute
-        const hasItemScope = self.hasAttribute('itemscope');
+        const hasItemScope = self.hasAttribute('itemscope') || self.matches('[be-scoped],[data-be-scoped]');
         if (hasItemScope) {
             await doBeHavings(self, [
                 {
