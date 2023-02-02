@@ -3,6 +3,7 @@ import { define } from 'be-decorated/DE.js';
 export class BeSpawnOf extends EventTarget {
     intro(proxy, target) {
         proxy.id = target.getAttribute('data-spawn-of');
+        target.removeAttribute('data-spawn-of');
     }
     async passTemplate(pp, mold) {
         const { self, template } = pp;
@@ -10,7 +11,6 @@ export class BeSpawnOf extends EventTarget {
         import('be-scoped/be-scoped.js');
         import('be-indefinite/be-indefinite.js');
         import('be-transrendered/be-transrendered.js');
-        const meta = {};
         //use be-scoped to create a proxy (PropertyBag) that serves as a host for transforms.
         //but only if has itemscope attribute
         const hasItemScope = self.hasAttribute('itemscope') || self.matches('[be-scoped],[data-be-scoped]');
@@ -23,15 +23,16 @@ export class BeSpawnOf extends EventTarget {
             ]);
         }
         //get reactive definitions from be-indefinite
-        await doBeHavings(template, [
-            {
-                be: 'indefinite',
-                having: {
-                    meta
+        let meta = template?.beDecorated?.indefinite?.meta;
+        if (meta === undefined) {
+            await doBeHavings(template, [
+                {
+                    be: 'indefinite',
+                    waitForResolved: true,
                 },
-                waitForResolved: true,
-            },
-        ]);
+            ]);
+        }
+        meta = template?.beDecorated?.indefinite?.meta;
         const { transformIslets } = meta;
         //do transform
         await doBeHavings(self, [{
