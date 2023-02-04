@@ -21,14 +21,17 @@ export class BeSpawnOf extends EventTarget implements Actions{
         
         //use be-scoped to create a proxy (PropertyBag) that serves as a host for transforms.
         //but only if has itemscope attribute
-        const hasItemScope = self.hasAttribute('itemscope') || self.matches('[be-scoped],[data-be-scoped]');
-        if(hasItemScope){
+        const isBeScoped = self.matches('[be-scoped],[data-be-scoped]');
+        if(isBeScoped){
+            console.log({msg: 'found unresolved be-scoped', self});
             await doBeHavings(self, [
                 {
                     be: 'scoped',
                     waitForResolved: true
                 },
             ]);
+        }else if(self.matches('[is-scoped],[data-is-scoped') && !self.hasAttribute('itemscope')){
+            debugger;
         }
 
         //get reactive definitions from be-indefinite
@@ -44,7 +47,7 @@ export class BeSpawnOf extends EventTarget implements Actions{
         meta = (<any>template!)?.beDecorated?.indefinite?.meta;
         const {transformIslets} = meta;
         //do transform
-        await doBeHavings(self, [            {
+        await doBeHavings(self, [{
             be: 'transrendered', 
             having: {
                 template,

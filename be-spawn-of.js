@@ -13,14 +13,17 @@ export class BeSpawnOf extends EventTarget {
         import('be-transrendered/be-transrendered.js');
         //use be-scoped to create a proxy (PropertyBag) that serves as a host for transforms.
         //but only if has itemscope attribute
-        const hasItemScope = self.hasAttribute('itemscope') || self.matches('[be-scoped],[data-be-scoped]');
-        if (hasItemScope) {
+        const isBeScoped = self.matches('[be-scoped],[data-be-scoped]');
+        if (isBeScoped) {
             await doBeHavings(self, [
                 {
                     be: 'scoped',
                     waitForResolved: true
                 },
             ]);
+        }
+        else if (self.matches('[is-scoped],[data-is-scoped') && !self.hasAttribute('itemscope')) {
+            debugger;
         }
         //get reactive definitions from be-indefinite
         let meta = template?.beDecorated?.indefinite?.meta;
