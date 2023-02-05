@@ -23,7 +23,6 @@ export class BeSpawnOf extends EventTarget implements Actions{
         //but only if has itemscope attribute
         const isBeScoped = self.matches('[be-scoped],[data-be-scoped]');
         if(isBeScoped){
-            console.log({msg: 'found unresolved be-scoped', self});
             await doBeHavings(self, [
                 {
                     be: 'scoped',
@@ -35,7 +34,7 @@ export class BeSpawnOf extends EventTarget implements Actions{
         }
 
         //get reactive definitions from be-indefinite
-        let meta = (<any>template!)?.beDecorated?.indefinite?.meta;
+        let meta = (<any>template!)?.beDecorated?.indefinite?.meta as Meta;
         if(meta === undefined){
             await doBeHavings(template!, [
                 {
@@ -46,12 +45,12 @@ export class BeSpawnOf extends EventTarget implements Actions{
         }
         meta = (<any>template!)?.beDecorated?.indefinite?.meta;
         const {transformIslets} = meta;
-        //do transform
+        const clonedTransformIslets = transformIslets?.map(x => ({...x}));
         await doBeHavings(self, [{
             be: 'transrendered', 
             having: {
                 template,
-                transformIslets,
+                transformIslets: clonedTransformIslets,
             } as beTransRdrEUP,
             waitForResolved: true,
         }]);       

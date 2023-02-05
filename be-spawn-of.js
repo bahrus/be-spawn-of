@@ -37,12 +37,12 @@ export class BeSpawnOf extends EventTarget {
         }
         meta = template?.beDecorated?.indefinite?.meta;
         const { transformIslets } = meta;
-        //do transform
+        const clonedTransformIslets = transformIslets?.map(x => ({ ...x }));
         await doBeHavings(self, [{
                 be: 'transrendered',
                 having: {
                     template,
-                    transformIslets,
+                    transformIslets: clonedTransformIslets,
                 },
                 waitForResolved: true,
             }]);
