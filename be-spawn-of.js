@@ -7,6 +7,13 @@ export class BeSpawnOf extends EventTarget {
     }
     async passTemplate(pp, mold) {
         const { self, template } = pp;
+        if (self.childElementCount > 0) {
+            const { content } = template;
+            const nodes = Array.from(self.childNodes);
+            for (const node of nodes) {
+                content.appendChild(node);
+            }
+        }
         const { doBeHavings } = await import('trans-render/lib/doBeHavings.js');
         import('be-scoped/be-scoped.js');
         import('be-indefinite/be-indefinite.js');
