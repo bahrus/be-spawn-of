@@ -1,6 +1,6 @@
 # be-spawn-of [WIP]
 
-be-spawn of fills an apparent gap in web development that is centered around web components.
+be-spawn-of fills an apparent gap in web development that is centered around web components.
 
 Out-of-the-box web components come in ~~three~~ two varieties:
 
@@ -8,7 +8,7 @@ Out-of-the-box web components come in ~~three~~ two varieties:
 2.  Custom elements that don't use Shadow DOM
 3.  Custom elements that use Shadow DOM
 
-But custom elements still imply a certain amount of formality -- they shine in their universality -- their ability to be used anywhere HTML works, including multiple frameworks.  There's an implied contract that goes along with them, including a custom element manifest.
+But custom elements still imply a certain amount of formality -- they shine in their universality -- their ability to be used anywhere HTML works, including multiple frameworks.  There's an implied contract that goes along with them, including a custom element manifest.  Notification of change is mostly limited to using events, which will tend to only be available for a very tiny subset of all the things we would want to observe in a more tightly coupled environment.
 
 And until scoped custom registries becomes a thing, the names of such custom elements become global in the page session.
 
@@ -18,13 +18,15 @@ The ability to extend JavaScript with "virtual" components that can be used to r
 
 Which leads us to consider the scenario where the section of HTML is part of a built-in element, like tables or lists, where wrapping such components inside a custom element tag would run into issues beyond undesired HTML clutter.
 
-be-spawn-of attempts to fill in this gap, in a way that can also evolve into a full-blown web component as requirements gels, the complexity grows, and the universality of the functionality reaches a critical point that warrants a contractual type commitment.
+be-spawn-of attempts to fill in this gap, in a way that can also evolve into a full-blown web component as requirements gel, the complexity grows, and the universality of the functionality reaches a critical point that warrants a contractual type commitment.
 
 An analogy of what be-spawn-of provides is blocks of code within a method or class, with access to the outside scope(s).  It smells a lot like Angular 1, but hopefully with some lessons learned.
 
 ## Example 1:
 
-We use this code-pen
+We use [this code-pen](https://codepen.io/Hyperplexed/pen/vYpXNJd) as our first demonstration project to compare between React and be-spawn-of components.
+
+The original, UserStatusButton component:
 
 ```JavaScript
 const UserStatusButton: React.FC<IUserStatusButton> = (props: IUserStatusButton) => {  
@@ -63,16 +65,16 @@ be-spawn-of equivalent, version 1:
     </button>
     <script data-settings='{
         "hydrate":[
-            {"on": "click", "of": "button", "do":[
-                {"set": "userStatus", "of": "host.ref", "from": "$.scope.userStatus"},
+            {"onClickOf": "button", "do":[
+                {"set": "userStatus", "eq": "userStatus"},
             ]}
         ],
         "transform": {
-            "buttonE": [{"disabled": "eq", "id": "id"}],
+            "buttonE": [{"disabled": "isEq", "id": "id"}],
             "iE": [{"className": "icon"}]
         }
     }'>
-        export const eq = ({userStatus, cnt}, {host}) => host.ref.userStatus === userStatus;
+        export const isEq = ({userStatus}, {host}) => host.userStatus === userStatus;
     </script>
 </template>
 ...
@@ -85,15 +87,14 @@ be-spawn-of equivalent, version 1:
 
 Now, what's not so great about both the React and the be-spawn-of example above, is both require JavaScript to display anything.  React requires a server-side framework to bypass this concern.  be-spawn-of can do the same thing in a far more light way:
 
+be-spawn-of equivalent, version 2:
 
 ```html
 <template id=user-status-button>
     <script data-settings='{
-        "hydrate":[
-            {"on": "click", "of": "button", "do":[
-                {"set": "userStatus", "of": "host.ref", "from": "$.scope.userStatus"},
-            ]}
-        ],
+        "hydrate":[{"onClickOf": "button", "do":[
+                {"set": "userStatus", "eq": "userStatus"},
+        ]}],
         "transform": {
             "buttonE": [{"disabled": "eq", "id": "id"}],
             "iE": [{"className": "icon"}]
@@ -105,7 +106,7 @@ Now, what's not so great about both the React and the be-spawn-of example above,
 ...
 <user-status-button href=#user-status-button be-scoped='{
     "userStatus": "Logging In",
-    "defer-rendering": true,
+    "#deferRendering": true,
     "#derived":{
         "icon": ["iconI", "className"],
         "id": ["buttonE", "id"]
@@ -116,6 +117,16 @@ Now, what's not so great about both the React and the be-spawn-of example above,
     </button>
 </user-status-button>
 ```
+
+##  Context Shifting
+
+One of the key aspects be-spawn-of specializes in is making it as easy as possible to juggle nested layers of "virtual components" within the outer web component host.  While "pass props down, events up" may make sense when working with loosely coupled full-fledged web components provided by an assortment of third parties, be-spawn-of is focused squarely on the innards of a (server-rendered) Web Component, and casts aside the "pass props down, events up" mantra in favor of a model that more closely resembles blocks of scoped code (surrounded by curly braces.)
+
+In particular, each template component definition (user-status-button in this case) can have multiple script tags, each tag focusing on one scope context as the "home" context for the data model being observed (the web component host in this example, by default), and optionally, a second scope context which serves as the "home" context for the UI element getting updated, and from which user-driven events are observed.  While the default choices mentioned above conform to the fore-mentioned mantra, we will often deviate from such constraints.
+
+## Context Shifting API
+
+The API that is heavily used by this decorator is located at trans-render/lib/ContextShifter.js
 
 
 
