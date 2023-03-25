@@ -64,9 +64,13 @@ be-spawn-of equivalent, version 1:
         <i></i>
     </button>
     <script data-settings='{
-        "hydrate":[
+        "hookUp":[
             {"onClickOf": "button", "do":[
-                {"set": "userStatus", "eq": "userStatus"},
+                {
+                    "set": {
+                        "eq": ["userStatus", "userStatus"]
+                    }
+                }
             ]}
         ],
         "transform": {

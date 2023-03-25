@@ -26,15 +26,15 @@
   ],
   "types": "types.d.ts",
   "dependencies": {
-    "be-decorated": "0.0.222",
-    "be-scoped": "0.0.1",
-    "be-hive": "0.0.79",
-    "trans-render": "0.0.664"
+    "be-decorated": "0.0.237",
+    "be-scoped": "0.0.7",
+    "be-hive": "0.0.82",
+    "trans-render": "0.0.671"
   },
   "devDependencies": {
-    "may-it-serve": "0.0.4",
+    "may-it-serve": "0.0.5",
     "@skypack/package-check": "0.2.2",
-    "@playwright/test": "1.30.0",
+    "@playwright/test": "1.32.1",
     "@custom-elements-manifest/analyzer": "0.6.4"
   },
   "repository": {
